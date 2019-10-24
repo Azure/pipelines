@@ -1,0 +1,21 @@
+{
+  "name": "azurepipeline",
+  "version": "1.0.0",
+  "description": "Trigger Azure pipeline release",
+  "main": "lib/main.js",
+  "dependencies": {
+    "@actions/core": "^1.0.0",
+    "@types/q": "^1.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.10",
+    "typescript": "^3.5.2",
+    "azure-devops-node-api": "^9.0.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nishu Bansal",
+  "license": "MIT"
+}
