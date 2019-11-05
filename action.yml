@@ -1,22 +1,15 @@
 name: 'Azure Pipeline' 
 description: 'Trigger an Azure pipeline release' 
 inputs:
-  azure-devops-url:
-    description: 'Fullyqualified URL to the Azure DevOps organization(eg, https://dev.azure.com/organization or https://server.example.com:8080/tfs/DefaultCollection)' 
-    required: true 
-  azure-devops-project: 
-    description: 'Name of the Azure DevOps Project' 
+  azure-devops-project-url:
+    description: 'Fullyqualified URL to the Azure DevOps organization along with project name(eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)' 
     required: true 
   azure-pipeline-name:
     description: 'Name of the Azure Pipline to be triggered' 
     required: true 
   azure-devops-token: 
     description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
-    required: false 
-  pipeline-type: 
-    description: 'YAML or Designer' 
-    required: false 
-    default: 'YAML'
+    required: true 
 runs: 
   using: 'node12' 
   main: 'lib/main.js' 
