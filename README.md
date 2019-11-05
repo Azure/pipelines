@@ -1,3 +1,13 @@
+# Trigger Azure pipeline
+Use this action to trigger pipelines in Azure DevOps.
+
+```yaml
+- uses: Azure/pipelines@v1
+  with:
+    azure-devops-project-url: 'https://dev.azure.com/organization/project-name'
+    azure-pipeline-name: 'pipeline-name' # name of the Azure pipeline to be triggered
+    azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
+```
 
 # Contributing
 
