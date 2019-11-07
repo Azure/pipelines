@@ -9,11 +9,11 @@ export class UrlParser {
         try {
             var parsedUrl = new URL(projectUrl);
             var splitPathName = parsedUrl.pathname.split("/");
-            var projectName = splitPathName[0];
+            var projectName = splitPathName[1];
             if (projectName) {
                 return projectName;
             } else {
-                throw new Error("Project name is empty in url. Specify the valid project url and try again");
+                throw new Error("Project name is empty in url.");
             }
         } catch (error) {
             this.ThrowUrlParseException(projectUrl, error);
@@ -32,7 +32,7 @@ export class UrlParser {
             if (collectionUrl) {
                 return collectionUrl;
             } else {
-                throw new Error("Organization url is empty. Specify the valid project url and try again");
+                throw new Error("Organization url is empty.");
             }
         } catch (error) {
             UrlParser.ThrowUrlParseException(projectUrl, error);
