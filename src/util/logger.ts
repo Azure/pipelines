@@ -9,8 +9,12 @@ export class Logger {
         }
     }
 
-    public static LogPipelineTriggered(pipelineName: string) {
-        core.info(`\Pipeline '${pipelineName}' is triggered`);
+    public static LogInfo(message: string) {
+        core.info(message);
+    }
+
+    public static LogPipelineTriggered(pipelineName: string, projectName: string) {
+        core.info(`\Pipeline '${pipelineName}' is triggered in project '${projectName}'`);
     }
 
     public static LogPipelineObject(object: any) {

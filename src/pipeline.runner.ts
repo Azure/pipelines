@@ -106,7 +106,7 @@ export class PipelineRunner {
                 core.setFailed("Errors: " + errorAndWarningMessage.errorMessage + " Warnings: " + errorAndWarningMessage.warningMessage);
             }
             else {
-                log.LogPipelineTriggered(pipelineName);
+                log.LogPipelineTriggered(pipelineName, projectName);
                 if (buildQueueResult._links != null) {
                     log.LogOutputUrl(buildQueueResult._links.web.href);
                 }
@@ -167,7 +167,7 @@ export class PipelineRunner {
         // create release
         let release = await releaseApi.createRelease(releaseStartMetadata, projectName);
         if (release != null) {
-            log.LogPipelineTriggered(pipelineName);
+            log.LogPipelineTriggered(pipelineName, projectName);
             log.LogPipelineTriggerOutput(release);
             if (release != null && release._links != null) {
                 log.LogOutputUrl(release._links.web.href);

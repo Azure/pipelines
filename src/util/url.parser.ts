@@ -1,3 +1,5 @@
+import { Logger as log } from './logger';
+
 export class UrlParser {
 
     static readonly NullOrEmptyProjectUrl = "Project url is null or empty. Specify the valid project url and try again";
@@ -9,17 +11,23 @@ export class UrlParser {
 
         try {
             projectUrl = projectUrl.trim();
+            log.LogInfo("project url is "+projectUrl);
             this.EnsureProjectName(projectUrl);
+            log.LogInfo("project url is "+projectUrl);
             var index = projectUrl.lastIndexOf("/");
             var projectNamePart = projectUrl.substr(index + 1);
+            log.LogInfo("projectNamePart is "+projectNamePart);
             var projectName = decodeURI(projectNamePart);
+            log.LogInfo("Decoded project name is "+projectName);
             if (projectName) {
                 return projectName;
             } else {
                 throw Error();
             }
         } catch (error) {
+            log.LogInfo("Exception occurred!!");
             var errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
+            log.LogInfo("Throwing error");
             throw new Error(errorMessage);
         }
     }
@@ -45,10 +53,23 @@ export class UrlParser {
     }
 
     private static EnsureProjectName(projectUrl: string) {
+        log.LogInfo("Ensuring project url");
+        if (!projectUrl) {
+            log.LogInfo("Project url is null or empty");
+        }
+
         var index = projectUrl.lastIndexOf("/");
+        log.LogInfo("Last index of project url is "+index);
+
+        var length = projectUrl.length;
+        log.LogInfo("Length of project url is "+length);
+        
         if (index == (projectUrl.length - 1)) {
+            log.LogInfo("Project name is missing. throwing Error");
             throw Error();
         }
+
+        log.LogInfo("Project name is present");
     }
 
     private static GetUrlParseExceptionMessage(projectUrl: string): string {
