@@ -1,5 +1,6 @@
 import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces';
+import { PipelineNotFoundError } from './../pipeline.error';
 
 export interface IErrorAndWarningMessage {
     errorMessage: string;
@@ -7,6 +8,20 @@ export interface IErrorAndWarningMessage {
 }
 
 export class PipelineHelper {
+
+    public static EnsureValidPipeline(projectName: string, pipelineName: string, pipelines: any) {
+        // If definition not found then Throw Error
+        if (pipelines == null || pipelines.length == 0) {
+            let errorMessage = `Pipeline named "${pipelineName}" not found in project "${projectName}"`;
+            throw new PipelineNotFoundError(errorMessage);
+        }
+
+        if (pipelines.length > 1) {
+            // If more than 1 definition found, throw ERROR
+            let errorMessage = `More than 1 Pipeline named "${pipelineName}" found in project "${projectName}"`;
+            throw Error(errorMessage);
+        }
+    }
 
     public static equals(str1: string, str2: string): boolean {
 
@@ -23,10 +38,6 @@ export class PipelineHelper {
         }
 
         return str1.trim().toUpperCase() === str2.trim().toUpperCase();
-    }
-
-    public static getPrintObject(object: any): string {
-        return JSON.stringify(object, null, 4);
     }
 
     public static processEnv(envVarName: string): string {
