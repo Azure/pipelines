@@ -6,6 +6,7 @@ import { PipelineNotFoundError } from './pipeline.error';
 import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces';
 import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import { PipelineHelper as p } from './util/pipeline.helper';
+import { Logger as log } from './util/logger';
 import { UrlParser } from './util/url.parser';
 
 export class PipelineRunner {
@@ -24,17 +25,18 @@ export class PipelineRunner {
             var taskParams = TaskParameters.getTaskParams();
             let authHandler = azdev.getPersonalAccessTokenHandler(taskParams.azureDevopsToken);
             let collectionUrl = UrlParser.GetCollectionUrlBase(this.taskParameters.azureDevopsProjectUrl);
-            core.debug("Creating connection with Azure DevOps service : " + collectionUrl)
+            core.info("Creating connection with Azure DevOps service : " + collectionUrl)
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
-            core.debug("Connection created");
+            core.info("Connection created");
 
+            let pipelineName = this.taskParameters.azurePipelineName;
             try {
-                core.info("Triggering Yaml pipeline : " + this.taskParameters.azurePipelineName);
+                core.debug("Triggering Yaml pipeline : " + pipelineName);
                 await this.RunYamlPipeline(webApi);
             }
             catch (error) {
                 if (error instanceof PipelineNotFoundError) {
-                    core.info("Triggering Designer pipeline : " + this.taskParameters.azurePipelineName);
+                    core.debug("Triggering Designer pipeline : " + pipelineName);
                     await this.RunDesignerPipeline(webApi);
                 } else {
                     throw error;
@@ -54,17 +56,7 @@ export class PipelineRunner {
         // Get matching build definitions for the given project and pipeline name
         const buildDefinitions = await buildApi.getDefinitions(projectName, pipelineName);
 
-        // If definition not found then Throw Error
-        if (buildDefinitions == null || buildDefinitions.length == 0) {
-            let errorMessage = `YAML Pipeline named "${pipelineName}" in project ${projectName} not found`;
-            throw new PipelineNotFoundError(errorMessage);
-        }
-
-        // If more than 1 definition is returned, Throw Error
-        if (buildDefinitions.length > 1) {
-            let errorMessage = `More than 1 YAML Pipeline named "${pipelineName}" found in project ${projectName}`;
-            throw Error(errorMessage);
-        }
+        p.EnsureValidPipeline(projectName, pipelineName, buildDefinitions);
 
         // Extract Id from build definition
         let buildDefinitionReference: BuildInterfaces.BuildDefinitionReference = buildDefinitions[0];
@@ -73,7 +65,7 @@ export class PipelineRunner {
         // Get build definition for the matching definition Id
         let buildDefinition = await buildApi.getDefinition(projectName, buildDefinitionId);
 
-        core.debug("Pipeline object : " + p.getPrintObject(buildDefinition));
+        log.LogPipelineObject(buildDefinition);
 
         // Fetch repository details from build definition
         let repositoryId = buildDefinition.repository.id.trim();
@@ -102,21 +94,21 @@ export class PipelineRunner {
             reason: BuildInterfaces.BuildReason.Triggered
         } as BuildInterfaces.Build;
 
-        core.debug("Input - \n" + p.getPrintObject(build));
+        log.LogPipelineTriggerInput(build);
 
         // Queue build
         let buildQueueResult = await buildApi.queueBuild(build, build.project.id, true);
         if (buildQueueResult != null) {
-            core.debug("Output - \n" + p.getPrintObject(buildQueueResult));
+            log.LogPipelineTriggerOutput(buildQueueResult);
             // If build result contains validation errors set result to FAILED
             if (buildQueueResult.validationResults != null && buildQueueResult.validationResults.length > 0) {
                 let errorAndWarningMessage = p.getErrorAndWarningMessageFromBuildResult(buildQueueResult.validationResults);
                 core.setFailed("Errors: " + errorAndWarningMessage.errorMessage + " Warnings: " + errorAndWarningMessage.warningMessage);
             }
             else {
-                core.info(`\Pipeline "${pipelineName}" is triggered`);
-                if (buildQueueResult._links != null && buildQueueResult._links.web != null) {
-                    core.setOutput('pipeline-url', buildQueueResult._links.web.href);
+                log.LogPipelineTriggered(pipelineName);
+                if (buildQueueResult._links != null) {
+                   log.LogOutputUrl(buildQueueResult._links.web);
                 }
             }
         }
@@ -130,21 +122,11 @@ export class PipelineRunner {
         // Get release definitions for the given project name and pipeline name
         const releaseDefinitions: ReleaseInterfaces.ReleaseDefinition[] = await releaseApi.getReleaseDefinitions(projectName, pipelineName, ReleaseInterfaces.ReleaseDefinitionExpands.Artifacts);
 
-        // If definition not found then Throw Error
-        if (releaseDefinitions == null || releaseDefinitions.length == 0) {
-            let errorMessage = `Designer Pipeline named "${pipelineName}" in project ${projectName} not found`;
-            throw new PipelineNotFoundError(errorMessage);
-        }
-
-        if (releaseDefinitions.length > 1) {
-            // If more than 1 definition found, throw ERROR
-            let errorMessage = `More than 1 Designer Pipeline named "${pipelineName}" found in project ${projectName}`;
-            throw Error(errorMessage);
-        }
+        p.EnsureValidPipeline(projectName, pipelineName, releaseDefinitions);
 
         let releaseDefinition = releaseDefinitions[0];
 
-        core.debug("Pipeline object : " + p.getPrintObject(releaseDefinition));
+        log.LogPipelineObject(releaseDefinition);
 
         // Filter Github artifacts from release definition
         let gitHubArtifacts = releaseDefinition.artifacts.filter(p.isGitHubArtifact);
@@ -181,15 +163,15 @@ export class PipelineRunner {
             artifacts: artifacts
         };
 
-        core.debug("Input - \n" + p.getPrintObject(releaseStartMetadata));
+        log.LogPipelineTriggerInput(releaseStartMetadata);
         // create release
         let release = await releaseApi.createRelease(releaseStartMetadata, projectName);
         if (release != null) {
-            core.debug("Output - \n" + p.getPrintObject(release));
-            if (release != null && release._links != null && release._links.web != null) {
-                core.setOutput('pipeline-url', release._links.web.href);
+            log.LogPipelineTriggered(pipelineName);
+            log.LogPipelineTriggerOutput(release);
+            if (release != null && release._links != null) {
+                log.LogOutputUrl(release._links.web);
             }
-            core.debug("Release is created");
         }
     }
 }

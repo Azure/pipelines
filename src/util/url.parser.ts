@@ -13,7 +13,7 @@ export class UrlParser {
             if (projectName) {
                 return projectName;
             } else {
-                throw new Error("Project name is empty in url.");
+                throw new Error("Project name is missing in url.");
             }
         } catch (error) {
             this.ThrowUrlParseException(projectUrl, error);
@@ -46,7 +46,7 @@ export class UrlParser {
     private static ThrowUrlParseException(projectUrl: string, error: any) {
         let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url and try again.`;
         if (error) {
-            errorMessage = errorMessage+ `Error details: "${error.message}"`;
+            errorMessage = errorMessage+ ` Error details: "${error.message}"`;
         }
         throw new Error(errorMessage);
     }
