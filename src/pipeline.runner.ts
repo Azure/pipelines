@@ -24,26 +24,19 @@ export class PipelineRunner {
         try {
             var taskParams = TaskParameters.getTaskParams();
             let authHandler = azdev.getPersonalAccessTokenHandler(taskParams.azureDevopsToken);
-            log.LogInfo("project url is - "+this.taskParameters.azureDevopsProjectUrl);
             let collectionUrl = UrlParser.GetCollectionUrlBase(this.taskParameters.azureDevopsProjectUrl);
             core.info(`Creating connection with Azure DevOps service : "${collectionUrl}"`)
-            log.LogInfo("project url input is - "+this.taskParameters.azureDevopsProjectUrl);
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
             core.info("Connection created");
 
-            if (!webApi){
-                log.LogInfo("WebApi is null");
-            }
-
             let pipelineName = this.taskParameters.azurePipelineName;
             try {
-                core.info(`Triggering Yaml pipeline : "${pipelineName}"`);
+                core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
                 await this.RunYamlPipeline(webApi);
             }
             catch (error) {
-                log.LogInfo("EXception occurred in executing pipeline. "+error.message);
                 if (error instanceof PipelineNotFoundError) {
-                    core.info(`Triggering Designer pipeline : "${pipelineName}"`);
+                    core.debug(`Triggering Designer pipeline : "${pipelineName}"`);
                     await this.RunDesignerPipeline(webApi);
                 } else {
                     throw error;
@@ -56,7 +49,6 @@ export class PipelineRunner {
     }
 
     public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
-        log.LogInfo("project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
         let buildApi = await webApi.getBuildApi();
@@ -123,7 +115,6 @@ export class PipelineRunner {
     }
 
     public async RunDesignerPipeline(webApi: azdev.WebApi): Promise<any> {
-        log.LogInfo("Release flow project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
         let releaseApi = await webApi.getReleaseApi();
