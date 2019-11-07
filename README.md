@@ -1,9 +1,11 @@
 # GitHub Action to trigger a run in Azure pipelines
 
 GitHub Actions makes it easy to build, test, and deploy your code right from GitHub. 
+
 However, if you would like to use your GH Action workflows just for CI and for CD, continue to use your favorite [Azure Pipelines](https://azure.microsoft.com/en-in/services/devops/pipelines/) with all the best-in-class features needed to enable compliant, safe deployments to their prod Environments, it is quite possible with this azure/pipelines action.
 
 With this action, you could trigger an Azure pipeline run right from inside an Action workflow.
+
 The definition of this Github Action is in [action.yml](https://github.com/Azure/pipelines/blob/master/action.yml).
 
 ## Sample workflow 
