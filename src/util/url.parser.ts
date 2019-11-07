@@ -7,16 +7,15 @@ export class UrlParser {
         }
 
         try {
-            var parsedUrl = new URL(projectUrl);
-            var splitPathName = parsedUrl.pathname.split("/");
-            var projectName = splitPathName[1];
+            var projectNamePart = projectUrl.substr(projectUrl.lastIndexOf("/") + 1);
+            var projectName = decodeURI(projectNamePart);
             if (projectName) {
                 return projectName;
             } else {
-                throw new Error("Project name is missing in url.");
+                throw Error();
             }
         } catch (error) {
-            this.ThrowUrlParseException(projectUrl, error);
+            this.ThrowUrlParseException(projectUrl);
         }
     }
 
@@ -27,15 +26,14 @@ export class UrlParser {
         }
 
         try {
-            var parsedUrl = new URL(projectUrl);
-            var collectionUrl = parsedUrl.origin;
+            var collectionUrl = projectUrl.substr(0, projectUrl.lastIndexOf("/"));
             if (collectionUrl) {
                 return collectionUrl;
             } else {
-                throw new Error("Organization url is empty.");
+                throw Error();
             }
         } catch (error) {
-            UrlParser.ThrowUrlParseException(projectUrl, error);
+            this.ThrowUrlParseException(projectUrl);
         }
     }
 
@@ -43,11 +41,8 @@ export class UrlParser {
         throw new Error("Project url is null or empty. Specify the valid project url and try again");
     }
 
-    private static ThrowUrlParseException(projectUrl: string, error: any) {
-        let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url and try again.`;
-        if (error) {
-            errorMessage = errorMessage+ ` Error details: "${error.message}"`;
-        }
+    private static ThrowUrlParseException(projectUrl: string) {
+        let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)) and try again.`;
         throw new Error(errorMessage);
     }
 
