@@ -31,14 +31,19 @@ export class PipelineRunner {
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
             core.info("Connection created");
 
+            if (!webApi){
+                log.LogInfo("WebApi is null");
+            }
+
             let pipelineName = this.taskParameters.azurePipelineName;
             try {
-                core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
+                core.info(`Triggering Yaml pipeline : "${pipelineName}"`);
                 await this.RunYamlPipeline(webApi);
             }
             catch (error) {
+                log.LogInfo("EXception occurred in executing pipeline. "+error.message);
                 if (error instanceof PipelineNotFoundError) {
-                    core.debug(`Triggering Designer pipeline : "${pipelineName}"`);
+                    core.info(`Triggering Designer pipeline : "${pipelineName}"`);
                     await this.RunDesignerPipeline(webApi);
                 } else {
                     throw error;
@@ -119,6 +124,7 @@ export class PipelineRunner {
 
     public async RunDesignerPipeline(webApi: azdev.WebApi): Promise<any> {
         let releaseApi = await webApi.getReleaseApi();
+        log.LogInfo("Release flow project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
 
