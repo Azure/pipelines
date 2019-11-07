@@ -74,7 +74,7 @@ export class UrlParser {
 
     private static GetUrlParseExceptionMessage(projectUrl: string): string {
         let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)) and try again.`;
-        throw errorMessage;
+        return errorMessage;
     }
 
     private static IsNullOrEmpty(value: string): boolean {
