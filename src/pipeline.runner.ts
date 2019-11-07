@@ -24,8 +24,10 @@ export class PipelineRunner {
         try {
             var taskParams = TaskParameters.getTaskParams();
             let authHandler = azdev.getPersonalAccessTokenHandler(taskParams.azureDevopsToken);
+            log.LogInfo("project url is - "+this.taskParameters.azureDevopsProjectUrl);
             let collectionUrl = UrlParser.GetCollectionUrlBase(this.taskParameters.azureDevopsProjectUrl);
             core.info(`Creating connection with Azure DevOps service : "${collectionUrl}"`)
+            log.LogInfo("project url input is - "+this.taskParameters.azureDevopsProjectUrl);
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
             core.info("Connection created");
 
@@ -50,6 +52,7 @@ export class PipelineRunner {
 
     public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
         let buildApi = await webApi.getBuildApi();
+        log.LogInfo("project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
 
