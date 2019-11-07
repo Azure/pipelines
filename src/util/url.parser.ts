@@ -7,6 +7,7 @@ export class UrlParser {
         }
 
         try {
+            projectUrl = projectUrl.trim();
             this.EnsureProjectName(projectUrl);
             var index = projectUrl.lastIndexOf("/");
             var projectNamePart = projectUrl.substr(index + 1);
@@ -28,6 +29,7 @@ export class UrlParser {
         }
 
         try {
+            projectUrl = projectUrl.trim();
             var collectionUrl = projectUrl.substr(0, projectUrl.lastIndexOf("/"));
             if (collectionUrl) {
                 return collectionUrl;

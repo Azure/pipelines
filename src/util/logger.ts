@@ -5,7 +5,7 @@ export class Logger {
     public static LogOutputUrl(url: string) {
         if (url) {
             core.setOutput('pipeline-url', url);
-            core.info(`More details on triggered pipeline can be found here : ${url}`);
+            core.info(`More details on triggered pipeline can be found here : "${url}"`);
         }
     }
 

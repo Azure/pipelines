@@ -25,18 +25,18 @@ export class PipelineRunner {
             var taskParams = TaskParameters.getTaskParams();
             let authHandler = azdev.getPersonalAccessTokenHandler(taskParams.azureDevopsToken);
             let collectionUrl = UrlParser.GetCollectionUrlBase(this.taskParameters.azureDevopsProjectUrl);
-            core.info("Creating connection with Azure DevOps service : " + collectionUrl)
+            core.info(`Creating connection with Azure DevOps service : "${collectionUrl}"`)
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
             core.info("Connection created");
 
             let pipelineName = this.taskParameters.azurePipelineName;
             try {
-                core.debug("Triggering Yaml pipeline : " + pipelineName);
+                core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
                 await this.RunYamlPipeline(webApi);
             }
             catch (error) {
                 if (error instanceof PipelineNotFoundError) {
-                    core.debug("Triggering Designer pipeline : " + pipelineName);
+                    core.debug(`Triggering Designer pipeline : "${pipelineName}"`);
                     await this.RunDesignerPipeline(webApi);
                 } else {
                     throw error;
@@ -108,7 +108,7 @@ export class PipelineRunner {
             else {
                 log.LogPipelineTriggered(pipelineName);
                 if (buildQueueResult._links != null) {
-                   log.LogOutputUrl(buildQueueResult._links.web.href);
+                    log.LogOutputUrl(buildQueueResult._links.web.href);
                 }
             }
         }
