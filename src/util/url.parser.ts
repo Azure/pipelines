@@ -1,9 +1,10 @@
 export class UrlParser {
 
-    public static GetProjectName(projectUrl: string): string {
+    static readonly NullOrEmptyProjectUrl = "Project url is null or empty. Specify the valid project url and try again";
 
+    public static GetProjectName(projectUrl: string): string {
         if (this.IsNullOrEmpty(projectUrl)) {
-            this.ThrowNullOrEmptyUrlException();
+            throw new Error(this.NullOrEmptyProjectUrl);
         }
 
         try {
@@ -18,14 +19,15 @@ export class UrlParser {
                 throw Error();
             }
         } catch (error) {
-            this.ThrowUrlParseException(projectUrl);
+            var errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
+            throw new Error(errorMessage);
         }
     }
 
     public static GetCollectionUrlBase(projectUrl: string): string {
 
         if (this.IsNullOrEmpty(projectUrl)) {
-            this.ThrowNullOrEmptyUrlException();
+            throw new Error(this.NullOrEmptyProjectUrl);
         }
 
         try {
@@ -37,7 +39,8 @@ export class UrlParser {
                 throw Error();
             }
         } catch (error) {
-            this.ThrowUrlParseException(projectUrl);
+            var errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
+            throw new Error(errorMessage);
         }
     }
 
@@ -48,13 +51,9 @@ export class UrlParser {
         }
     }
 
-    private static ThrowNullOrEmptyUrlException() {
-        throw new Error("Project url is null or empty. Specify the valid project url and try again");
-    }
-
-    private static ThrowUrlParseException(projectUrl: string) {
+    private static GetUrlParseExceptionMessage(projectUrl: string): string {
         let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)) and try again.`;
-        throw new Error(errorMessage);
+        throw errorMessage;
     }
 
     private static IsNullOrEmpty(value: string): boolean {
