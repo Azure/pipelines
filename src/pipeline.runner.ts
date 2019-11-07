@@ -56,10 +56,10 @@ export class PipelineRunner {
     }
 
     public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
-        let buildApi = await webApi.getBuildApi();
         log.LogInfo("project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
+        let buildApi = await webApi.getBuildApi();
 
         // Get matching build definitions for the given project and pipeline name
         const buildDefinitions = await buildApi.getDefinitions(projectName, pipelineName);
@@ -123,11 +123,10 @@ export class PipelineRunner {
     }
 
     public async RunDesignerPipeline(webApi: azdev.WebApi): Promise<any> {
-        let releaseApi = await webApi.getReleaseApi();
         log.LogInfo("Release flow project url is - "+this.taskParameters.azureDevopsProjectUrl);
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
-
+        let releaseApi = await webApi.getReleaseApi();
         // Get release definitions for the given project name and pipeline name
         const releaseDefinitions: ReleaseInterfaces.ReleaseDefinition[] = await releaseApi.getReleaseDefinitions(projectName, pipelineName, ReleaseInterfaces.ReleaseDefinitionExpands.Artifacts);
 
