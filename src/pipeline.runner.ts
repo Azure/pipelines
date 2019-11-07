@@ -108,7 +108,7 @@ export class PipelineRunner {
             else {
                 log.LogPipelineTriggered(pipelineName);
                 if (buildQueueResult._links != null) {
-                   log.LogOutputUrl(buildQueueResult._links.web);
+                   log.LogOutputUrl(buildQueueResult._links.web.href);
                 }
             }
         }
@@ -170,7 +170,7 @@ export class PipelineRunner {
             log.LogPipelineTriggered(pipelineName);
             log.LogPipelineTriggerOutput(release);
             if (release != null && release._links != null) {
-                log.LogOutputUrl(release._links.web);
+                log.LogOutputUrl(release._links.web.href);
             }
         }
     }
