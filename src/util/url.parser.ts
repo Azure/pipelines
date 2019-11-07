@@ -7,7 +7,9 @@ export class UrlParser {
         }
 
         try {
-            var projectNamePart = projectUrl.substr(projectUrl.lastIndexOf("/") + 1);
+            this.EnsureProjectName(projectUrl);
+            var index = projectUrl.lastIndexOf("/");
+            var projectNamePart = projectUrl.substr(index + 1);
             var projectName = decodeURI(projectNamePart);
             if (projectName) {
                 return projectName;
@@ -34,6 +36,13 @@ export class UrlParser {
             }
         } catch (error) {
             this.ThrowUrlParseException(projectUrl);
+        }
+    }
+
+    private static EnsureProjectName(projectUrl: string) {
+        var index = projectUrl.lastIndexOf("/");
+        if (index == (projectUrl.length - 1)) {
+            throw Error();
         }
     }
 
