@@ -9,14 +9,14 @@ export class UrlParser {
         try {
             var parsedUrl = new URL(projectUrl);
             var splitPathName = parsedUrl.pathname.split("/");
-            var projectName = splitPathName[0]
+            var projectName = splitPathName[0];
             if (projectName) {
                 return projectName;
             } else {
                 throw new Error("Project name is empty in url. Specify the valid project url and try again");
             }
         } catch (error) {
-            this.ThrowUrlParseException(projectUrl);
+            this.ThrowUrlParseException(projectUrl, error);
         }
     }
 
@@ -35,7 +35,7 @@ export class UrlParser {
                 throw new Error("Organization url is empty. Specify the valid project url and try again");
             }
         } catch (error) {
-            UrlParser.ThrowUrlParseException(projectUrl);
+            UrlParser.ThrowUrlParseException(projectUrl, error);
         }
     }
 
@@ -43,8 +43,11 @@ export class UrlParser {
         throw new Error("Project url is null or empty. Specify the valid project url and try again");
     }
 
-    private static ThrowUrlParseException(projectUrl: string) {
+    private static ThrowUrlParseException(projectUrl: string, error: any) {
         let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url and try again.`;
+        if (error) {
+            errorMessage = errorMessage+ `Error details: "${error.message}"`;
+        }
         throw new Error(errorMessage);
     }
 
