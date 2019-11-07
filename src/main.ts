@@ -5,9 +5,9 @@ import { PipelineRunner } from './pipeline.runner';
 async function main() {
     try {
         const pipelineRunner = new PipelineRunner(TaskParameters.getTaskParams());
-        core.info("Starting pipeline runner");
+        core.debug("Starting pipeline runner");
         await pipelineRunner.start();
-        core.info("pipeline runner completed");
+        core.debug("pipeline runner completed");
     }
     catch (error) {
         const errorMessage = JSON.stringify(error);
