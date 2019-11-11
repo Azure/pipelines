@@ -1,5 +1,5 @@
-name: 'Azure Pipeline' 
-description: 'Trigger an Azure pipeline release' 
+name: 'Azure Pipelines' 
+description: 'Trigger a run in Azure pipelines' 
 inputs:
   azure-devops-project-url:
     description: 'Fullyqualified URL to the Azure DevOps organization along with project name(eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)' 
