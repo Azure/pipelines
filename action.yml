@@ -9,7 +9,11 @@ inputs:
     required: true 
   azure-devops-token: 
     description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
-    required: true 
+    required: true
+  azure-pipeline-build-parameters:
+    description: 'Additional build parameters (serialized JSON to string)'
+    required: false
+    default: '{}'
 runs: 
   using: 'node12' 
   main: 'lib/main.js' 
