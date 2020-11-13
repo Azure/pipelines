@@ -32,7 +32,7 @@ export class PipelineRunner {
             let pipelineName = this.taskParameters.azurePipelineName;
             try {
                 core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
-                await this.RunYamlPipeline(webApi);
+                await this.RunYamlPipeline(webApi, taskParams.buildParameters);
             }
             catch (error) {
                 if (error instanceof PipelineNotFoundError) {
@@ -48,7 +48,7 @@ export class PipelineRunner {
         }
     }
 
-    public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
+    public async RunYamlPipeline(webApi: azdev.WebApi, buildParameters: string): Promise<any> {
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
         let buildApi = await webApi.getBuildApi();
@@ -91,7 +91,8 @@ export class PipelineRunner {
             },
             sourceBranch: sourceBranch,
             sourceVersion: sourceVersion,
-            reason: BuildInterfaces.BuildReason.Triggered
+            reason: BuildInterfaces.BuildReason.Triggered,
+            parameters: buildParameters,
         } as BuildInterfaces.Build;
 
         log.LogPipelineTriggerInput(build);
