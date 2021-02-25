@@ -77,9 +77,21 @@ export class PipelineRunner {
         if (p.equals(repositoryId, this.repository) && p.equals(repositoryType, this.githubRepo)) {
             core.debug("pipeline is linked to same Github repo");
             sourceBranch = this.branch,
-                sourceVersion = this.commitId
+            sourceVersion = this.commitId
         } else {
             core.debug("pipeline is not linked to same Github repo");
+        }
+
+        // If provided, the user-specified ref and sha override our implied branch
+        // and commit hash from GitHub. This is useful when we're using this action
+        // in workflows triggered by non-PR events (like issue_comment).
+        if (this.taskParameters.ref) {
+            sourceBranch = this.taskParameters.ref;
+            core.debug(`using user-specified ref ${sourceBranch}`);
+        }
+        if (this.taskParameters.sha) {
+            sourceVersion = this.taskParameters.sha;
+            core.debug(`using user-specified sha ${sourceVersion}`);
         }
 
         let build: BuildInterfaces.Build = {
