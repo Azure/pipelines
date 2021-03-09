@@ -29,14 +29,14 @@ export class PipelineRunner {
             let webApi = new azdev.WebApi(collectionUrl, authHandler);
             core.info("Connection created");
 
-            let pipelineName = this.taskParameters.azurePipelineName;
+            let description = `(name="${this.taskParameters.azurePipelineName}", id=${this.taskParameters.azurePipelineId})`;
             try {
-                core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
+                core.debug(`Triggering Yaml pipeline : ${description}`);
                 await this.RunYamlPipeline(webApi);
             }
             catch (error) {
                 if (error instanceof PipelineNotFoundError) {
-                    core.debug(`Triggering Designer pipeline : "${pipelineName}"`);
+                    core.debug(`Triggering Designer pipeline : ${description}`);
                     await this.RunDesignerPipeline(webApi);
                 } else {
                     throw error;
@@ -51,16 +51,22 @@ export class PipelineRunner {
     public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
+        let buildDefinitionId = this.taskParameters.azurePipelineId ? parseInt(this.taskParameters.azurePipelineId, 10) : 0;
         let buildApi = await webApi.getBuildApi();
 
-        // Get matching build definitions for the given project and pipeline name
-        const buildDefinitions = await buildApi.getDefinitions(projectName, pipelineName);
+        // If the user passed a name instead of a definition id, search existing
+        // pipelines for that id.
+        if (!buildDefinitionId) {
+            // Get matching build definitions for the given project and pipeline name
+            const buildDefinitions = await buildApi.getDefinitions(projectName, pipelineName);
 
-        p.EnsureValidPipeline(projectName, pipelineName, buildDefinitions);
+            p.EnsureValidPipeline(projectName, pipelineName, buildDefinitions);
 
-        // Extract Id from build definition
-        let buildDefinitionReference: BuildInterfaces.BuildDefinitionReference = buildDefinitions[0];
-        let buildDefinitionId = buildDefinitionReference.id;
+            // Extract Id from build definition
+            let buildDefinitionReference: BuildInterfaces.BuildDefinitionReference = buildDefinitions[0];
+            pipelineName = buildDefinitionReference.name;
+            buildDefinitionId = buildDefinitionReference.id;
+        }
 
         // Get build definition for the matching definition Id
         let buildDefinition = await buildApi.getDefinition(projectName, buildDefinitionId);

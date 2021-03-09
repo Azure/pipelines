@@ -5,8 +5,11 @@ inputs:
     description: 'Fullyqualified URL to the Azure DevOps organization along with project name(eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)'
     required: true
   azure-pipeline-name:
-    description: 'Name of the Azure Pipline to be triggered'
-    required: true
+    description: 'Name of the Azure Pipeline to be triggered'
+    required: false
+  azure-pipeline-id:
+    description: 'The build definition ID of the Azure Pipeline to be triggered'
+    required: false
   azure-devops-token:
     description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN'
     required: true
