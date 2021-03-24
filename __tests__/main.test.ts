@@ -116,7 +116,7 @@ describe('Testing all functions of class PipelineHelper', () => {
         });
     });
 
-    test('getErrorAndWarningMessageFromBuildResult() - server errors also which comes not in form of array', () => {
+    test('getErrorAndWarningMessageFromBuildResult() - message validation error which do not come in form of array', () => {
         expect(PipelineHelper.getErrorAndWarningMessageFromBuildResult(
             { message: 'ErrorMessage' } as any
         )).toMatchObject({
@@ -125,7 +125,7 @@ describe('Testing all functions of class PipelineHelper', () => {
         });
     });
 
-    test('getErrorAndWarningMessageFromBuildResult() - server errors also which comes not in form of array', () => {
+    test('getErrorAndWarningMessageFromBuildResult() - message from server error which do not come in form of array', () => {
         expect(PipelineHelper.getErrorAndWarningMessageFromBuildResult(
             { serverError: { message: 'ServerErrorMessage'  } } as any
         )).toMatchObject({
