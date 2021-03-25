@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import { TaskParameters } from './task.parameters';
 import { PipelineRunner } from './pipeline.runner';
 
-async function main() {
+export async function main() {
     try {
         const pipelineRunner = new PipelineRunner(TaskParameters.getTaskParams());
         core.debug("Starting pipeline runner");
