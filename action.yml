@@ -2,7 +2,7 @@ name: 'Azure Pipelines Action'
 description: 'Trigger a run in Azure pipelines' 
 inputs:
   azure-devops-project-url: 'https://dev.azure.com/DevopsCPTTraining/EngageDemo'
-    description: 'Fullyqualified URL to the Azure DevOps organization along with project name(eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)' 
+    description: 'Fullyqualified URL to the Azure DevOps organization along with project name (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)' 
     required: true 
   azure-pipeline-name: 'Github-Actions-CD'
     description: 'Name of the Azure Pipline to be triggered' 
