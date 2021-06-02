@@ -178,7 +178,8 @@ describe('Testing all functions of class PipelineRunner', () => {
         jest.spyOn(core, 'debug').mockImplementation();
         jest.spyOn(core, 'info').mockImplementation();
         mockBuildDefinitions = [{
-            id: 5
+            id: 5,
+            name: 'my-pipeline'
         }];
         mockBuildDefinition = {
             id: 5,
@@ -231,7 +232,8 @@ describe('Testing all functions of class PipelineRunner', () => {
         jest.spyOn(core, 'info').mockImplementation();
         jest.spyOn(core, 'setFailed').mockImplementation();
         mockBuildDefinitions = [{
-            id: 5
+            id: 5,
+            name: 'my-pipeline'
         }];
         mockBuildDefinition = {
             id: 5,
@@ -304,7 +306,8 @@ describe('Testing all functions of class PipelineRunner', () => {
         mockBuildDefinitions = null;
         mockReleaseDefinitions = [{
             id: 5,
-            artifacts: []
+            artifacts: [],
+            name: 'my-pipeline'
         }];
         mockReleaseResponse = {
             _links: {

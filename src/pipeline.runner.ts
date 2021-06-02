@@ -54,8 +54,7 @@ export class PipelineRunner {
         let buildApi = await webApi.getBuildApi();
 
         // Get matching build definitions for the given project and pipeline name
-        const buildDefinitions = (await buildApi.getDefinitions(projectName, pipelineName))
-          .filter(buildDefinition => buildDefinition.name === pipelineName);
+        const buildDefinitions = (await buildApi.getDefinitions(projectName, pipelineName))?.filter(buildDefinition => buildDefinition.name === pipelineName);
 
         p.EnsureValidPipeline(projectName, pipelineName, buildDefinitions);
 
@@ -121,8 +120,7 @@ export class PipelineRunner {
         let releaseApi = await webApi.getReleaseApi();
         // Get release definitions for the given project name and pipeline name
         const releaseDefinitions: ReleaseInterfaces.ReleaseDefinition[] =
-          (await releaseApi.getReleaseDefinitions(projectName, pipelineName, ReleaseInterfaces.ReleaseDefinitionExpands.Artifacts))
-            .filter(releaseDefinition => releaseDefinition.name === pipelineName);
+          (await releaseApi.getReleaseDefinitions(projectName, pipelineName, ReleaseInterfaces.ReleaseDefinitionExpands.Artifacts))?.filter(releaseDefinition => releaseDefinition.name === pipelineName);
 
         p.EnsureValidPipeline(projectName, pipelineName, releaseDefinitions);
 
