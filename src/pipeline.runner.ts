@@ -129,11 +129,14 @@ export class PipelineRunner {
         log.LogPipelineObject(releaseDefinition);
 
         // Create ConfigurationVariableValue objects from the input variables
-        let variables = JSON.parse(this.taskParameters.azurePipelineVariables)
-        Object.keys(variables).map(function (key, index) {
-            let oldValue = variables[key]
-            variables[key] = { value: oldValue }
-        });
+        let variables = undefined
+        if (this.taskParameters.azurePipelineVariables) {
+            variables = JSON.parse(this.taskParameters.azurePipelineVariables);
+            Object.keys(variables).map(function (key, index) {
+                let oldValue = variables[key]
+                variables[key] = { value: oldValue }
+            });
+        }
 
         // Filter Github artifacts from release definition
         let gitHubArtifacts = releaseDefinition.artifacts.filter(p.isGitHubArtifact);
@@ -168,7 +171,7 @@ export class PipelineRunner {
             definitionId: releaseDefinition.id,
             reason: ReleaseInterfaces.ReleaseReason.ContinuousIntegration,
             artifacts: artifacts,
-            variables: JSON.parse(this.taskParameters.azurePipelineVariables)
+            variables: variables
         };
 
         log.LogPipelineTriggerInput(releaseStartMetadata);
