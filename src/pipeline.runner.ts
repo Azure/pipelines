@@ -4,6 +4,7 @@ import { TaskParameters } from './task.parameters';
 import { PipelineNotFoundError } from './pipeline.error';
 
 import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces';
+import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import { PipelineHelper as p } from './util/pipeline.helper';
 import { Logger as log } from './util/logger';
 import { UrlParser } from './util/url.parser';
