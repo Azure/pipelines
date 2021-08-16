@@ -4,7 +4,6 @@ import { TaskParameters } from './task.parameters';
 import { PipelineNotFoundError } from './pipeline.error';
 
 import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces';
-import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import { PipelineHelper as p } from './util/pipeline.helper';
 import { Logger as log } from './util/logger';
 import { UrlParser } from './util/url.parser';
@@ -72,6 +71,7 @@ export class PipelineRunner {
         let repositoryType = buildDefinition.repository.type.trim();
         let sourceBranch = null;
         let sourceVersion = null;
+        let buildReason = "triggered";
 
         // If definition is linked to existing github repo, pass github source branch and source version to build
         if (p.equals(repositoryId, this.repository) && p.equals(repositoryType, this.githubRepo)) {
@@ -91,7 +91,7 @@ export class PipelineRunner {
             },
             sourceBranch: sourceBranch,
             sourceVersion: sourceVersion,
-            reason: BuildInterfaces.BuildReason.Triggered,
+            reason: buildReason,
             parameters: this.taskParameters.azurePipelineVariables
         } as BuildInterfaces.Build;
 
