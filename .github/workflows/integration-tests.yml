@@ -3,7 +3,7 @@ on:
  pull_request_target:
     types: [labeled, opened]
     branches:
-      - main
+      - master
       - 'releases/*'
 jobs: 
     trigger-integration-tests:
