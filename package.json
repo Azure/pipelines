@@ -5,12 +5,12 @@
   "main": "lib/main.js",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@types/q": "^1.5.2"
+    "@types/q": "^1.5.2",
+    "azure-devops-node-api": "11.0.1"
   },
   "devDependencies": {
     "@types/node": "^12.12.6",
-    "typescript": "^3.5.2",
-    "azure-devops-node-api": "11.0.1"
+    "typescript": "^3.5.2"
   },
   "scripts": {
     "build": "tsc",
