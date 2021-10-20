@@ -17,5 +17,14 @@ jobs:
               path: IntegrationTests
             
         - name: Trigger Test run
+          env:
+            token: ${{ secrets.L2_REPO_TOKEN }}
+            commit: ${{ github.event.pull_request.head.sha }}
+            repository: ${{ github.repository }}
+            prnumber: ${{ github.event.pull_request.number }} 
+            prsource: ${{ github.event.pull_request.head.ref }}
+            prtarget: ${{ github.event.pull_request.base.ref }}
+            username:  ${{ secrets.L2_REPO_USER }} 
+            prsourcerepository: ${{ github.event.pull_request.head.repo.full_name }}
           run: |
-            bash ./IntegrationTests/.github/workflows/TriggerIntegrationTests.sh ${{ secrets.L2_REPO_TOKEN }} ${{ github.event.pull_request.head.sha }} ${{ github.repository }} ${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.ref }} ${{ github.event.pull_request.base.ref }} ${{ secrets.L2_REPO_USER }} ${{ github.event.pull_request.head.repo.full_name }}
+            bash ./IntegrationTests/.github/workflows/TriggerIntegrationTests.sh "$token" "$commit" "$repository" "$prnumber" "$prsource" "$prtarget" "$username" "$prsourcerepository"
