@@ -7,6 +7,9 @@ inputs:
   azure-pipeline-name:
     description: 'Name of the Azure Pipline to be triggered' 
     required: true 
+  azure-pipeline-variables: 
+    description: 'Set/Overwrite pipeline variables' 
+    required: false
   azure-devops-token: 
     description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
     required: true 
