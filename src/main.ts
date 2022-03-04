@@ -6,8 +6,10 @@ export async function main() {
     try {
         const pipelineRunner = new PipelineRunner(TaskParameters.getTaskParams());
         core.debug("Starting pipeline runner");
-        await pipelineRunner.start();
+        const run = await pipelineRunner.start();
         core.debug("pipeline runner completed");
+
+        console.log({ run });
     }
     catch (error) {
         const errorMessage = JSON.stringify(error);

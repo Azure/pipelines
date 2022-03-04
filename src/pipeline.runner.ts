@@ -20,7 +20,7 @@ export class PipelineRunner {
         this.taskParameters = taskParameters
     }
 
-    public async start(): Promise<any> {
+    public async start(): Promise<BuildInterfaces.Build | undefined> {
         try {
             var taskParams = TaskParameters.getTaskParams();
             let authHandler = azdev.getPersonalAccessTokenHandler(taskParams.azureDevopsToken);
@@ -32,7 +32,9 @@ export class PipelineRunner {
             let pipelineName = this.taskParameters.azurePipelineName;
             try {
                 core.debug(`Triggering Yaml pipeline : "${pipelineName}"`);
-                await this.RunYamlPipeline(webApi);
+                const run = await this.RunYamlPipeline(webApi);
+
+                return run;
             }
             catch (error) {
                 if (error instanceof PipelineNotFoundError) {
@@ -48,7 +50,7 @@ export class PipelineRunner {
         }
     }
 
-    public async RunYamlPipeline(webApi: azdev.WebApi): Promise<any> {
+    public async RunYamlPipeline(webApi: azdev.WebApi): Promise<BuildInterfaces.Build | undefined> {
         let projectName = UrlParser.GetProjectName(this.taskParameters.azureDevopsProjectUrl);
         let pipelineName = this.taskParameters.azurePipelineName;
         let buildApi = await webApi.getBuildApi();
@@ -113,6 +115,8 @@ export class PipelineRunner {
                 }
             }
         }
+
+        return buildQueueResult;
     }
 
     public async RunDesignerPipeline(webApi: azdev.WebApi): Promise<any> {
