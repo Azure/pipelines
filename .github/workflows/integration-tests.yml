@@ -1,12 +1,14 @@
 name: "Trigger Integration tests"
 on:
-  pull_request:
+ pull_request_target:
+    types: [labeled, opened]
     branches:
       - master
       - 'releases/*'
 jobs: 
     trigger-integration-tests:
       name: Trigger Integration tests
+      if: startsWith(github.event.pull_request.head.label, format('{0}:',github.repository_owner)) || contains(github.event.pull_request.labels.*.name, 'run-tests')
       runs-on: ubuntu-latest
       steps:
         - name: Check out repository
@@ -15,5 +17,14 @@ jobs:
               path: IntegrationTests
             
         - name: Trigger Test run
+          env:
+            token: ${{ secrets.L2_REPO_TOKEN }}
+            commit: ${{ github.event.pull_request.head.sha }}
+            repository: ${{ github.repository }}
+            prnumber: ${{ github.event.pull_request.number }} 
+            prsource: ${{ github.event.pull_request.head.ref }}
+            prtarget: ${{ github.event.pull_request.base.ref }}
+            username:  ${{ secrets.L2_REPO_USER }} 
+            prsourcerepository: ${{ github.event.pull_request.head.repo.full_name }}
           run: |
-            bash ./IntegrationTests/.github/workflows/TriggerIntegrationTests.sh ${{ secrets.L2_REPO_TOKEN }} ${{ github.event.pull_request.head.sha }} ${{ github.repository }} ${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.ref }} ${{ github.event.pull_request.base.ref }} ${{ secrets.L2_REPO_USER }}
+            bash ./IntegrationTests/.github/workflows/TriggerIntegrationTests.sh "$token" "$commit" "$repository" "$prnumber" "$prsource" "$prtarget" "$username" "$prsourcerepository"

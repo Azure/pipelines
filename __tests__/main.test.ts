@@ -211,7 +211,7 @@ describe('Testing all functions of class PipelineRunner', () => {
             project: {
                 id: 'my-project',
             },
-            reason: 943,
+            reason: 1967,
             sourceBranch: null,
             sourceVersion: null,
         }
@@ -260,7 +260,7 @@ describe('Testing all functions of class PipelineRunner', () => {
             project: {
                 id: 'my-project',
             },
-            reason: 943,
+            reason: 1967,
             sourceBranch: 'releases',
             sourceVersion: 'sampleSha',
         }
