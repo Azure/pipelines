@@ -113,6 +113,28 @@ export class PipelineRunner {
                 }
             }
         }
+
+        // Keep querying the pipeline status until it completes or cancels.
+        let buildResult: BuildInterfaces.Build;
+        do
+        {
+            await new Promise(resolve => setTimeout(resolve, buildResult ? 60000 : 0));
+
+            buildResult = await buildApi.getBuild(projectName, buildQueueResult.id);
+            core.debug(`Build Status = "${BuildInterfaces.BuildStatus[buildResult.status]}"`);
+        } while (buildResult.status == BuildInterfaces.BuildStatus.InProgress);
+
+        log.LogInfo(`Build Status = "${BuildInterfaces.BuildStatus[buildResult.status]}"`);
+        log.LogInfo(`Build Result = "${BuildInterfaces.BuildResult[buildResult.result]}"`);
+
+        if (buildResult.status != BuildInterfaces.BuildStatus.Completed
+            || buildResult.result != BuildInterfaces.BuildResult.Succeeded)
+        {
+            core.setFailed("Build failed or canceled.");
+        }
+
+        log.LogInfo("Build succeed.");
+        log.LogOutputUrl(buildResult._links.web.href);
     }
 
     public async RunDesignerPipeline(webApi: azdev.WebApi): Promise<any> {
