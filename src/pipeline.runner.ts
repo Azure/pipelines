@@ -92,7 +92,8 @@ export class PipelineRunner {
             sourceBranch: sourceBranch,
             sourceVersion: sourceVersion,
             reason: BuildInterfaces.BuildReason.Triggered,
-            parameters: this.taskParameters.azurePipelineVariables
+            parameters: this.taskParameters.azurePipelineVariables,
+            templateParameters: this.taskParameters.azurePipelineVariables 
         } as BuildInterfaces.Build;
 
         log.LogPipelineTriggerInput(build);
