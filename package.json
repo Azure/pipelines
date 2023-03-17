@@ -13,12 +13,15 @@
     "azure-devops-node-api": "11.0.1",
     "jest": "^26.0.1",
     "ts-jest": "^26.0.1",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.2",
+    "@vercel/ncc": "^0.36.0"
   },
   "scripts": {
     "build": "tsc",
+    "pack": "ncc build",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "all": "npm run build && npm run test && npm run test-coverage && npm run pack"
   },
   "author": "Nishu Bansal",
   "license": "MIT"
