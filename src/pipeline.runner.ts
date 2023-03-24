@@ -1,13 +1,15 @@
-import * as core from '@actions/core';
-import * as azdev from "azure-devops-node-api";
-import { TaskParameters } from './task.parameters';
-import { PipelineNotFoundError } from './pipeline.error';
+import * as core from '@actions/core'
+import * as azdev from "azure-devops-node-api"
+import { TaskParameters } from './task.parameters'
+import { PipelineNotFoundError } from './pipeline.error'
 
-import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces';
-import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces';
-import { PipelineHelper as p } from './util/pipeline.helper';
-import { Logger as log } from './util/logger';
-import { UrlParser } from './util/url.parser';
+import * as ReleaseInterfaces from 'azure-devops-node-api/interfaces/ReleaseInterfaces'
+import * as BuildInterfaces from 'azure-devops-node-api/interfaces/BuildInterfaces'
+import { BuildResult, BuildStatus } from 'azure-devops-node-api/interfaces/BuildInterfaces'
+import { PipelineHelper as p } from './util/pipeline.helper'
+import { Logger as log } from './util/logger'
+import { UrlParser } from './util/url.parser'
+import { IBuildApi } from 'azure-devops-node-api/BuildApi'
 
 export class PipelineRunner {
     public taskParameters: TaskParameters;
@@ -15,6 +17,8 @@ export class PipelineRunner {
     readonly branch = p.processEnv("GITHUB_REF");
     readonly commitId = p.processEnv("GITHUB_SHA");
     readonly githubRepo = "GitHub";
+
+    readonly waitPeriod = 10_000;
 
     constructor(taskParameters: TaskParameters) {
         this.taskParameters = taskParameters
@@ -116,7 +120,24 @@ export class PipelineRunner {
                 if (buildQueueResult._links != null) {
                     log.LogOutputUrl(buildQueueResult._links.web.href);
                 }
+                setTimeout(async () => await this.waitForPipeline(buildApi, build.project.id, buildQueueResult.id), this.waitPeriod);
             }
+        }
+    }
+
+    private async waitForPipeline(buildApi: IBuildApi , projectId: string,  buildId: number) {
+        let build:  BuildInterfaces.Build = await buildApi.getBuild(projectId, buildId, 'result,status');
+
+        if (build.status !== BuildStatus.Completed) {
+            log.LogInfo(`Pipeline is not yet competed, waiting... (status: ${build.status})`);
+            setTimeout(async () => await this.waitForPipeline(buildApi, projectId, buildId), this.waitPeriod);
+            return
+        }
+        log.LogInfo(`Pipeline is completed, build result is: ${build.result}`);
+
+        if (build.result != BuildResult.Succeeded) {
+            log.LogInfo(`Pipeline result is not Succeeded`)
+            core.setFailed(`Pipeline result is not Succeeded (2), instead: ${build.result}`)
         }
     }
 

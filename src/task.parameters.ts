@@ -7,6 +7,7 @@ export class TaskParameters {
     private _azureDevopsToken: string;
     private _azurePipelineVariables: string;
     private _azurePipelineBranch: string;
+    private _waitForResult: boolean;
 
     private constructor() {
         this._azureDevopsProjectUrl = core.getInput('azure-devops-project-url', { required: true });
@@ -14,6 +15,8 @@ export class TaskParameters {
         this._azureDevopsToken = core.getInput('azure-devops-token', { required: true });
         this._azurePipelineVariables = core.getInput('azure-pipeline-variables', { required: false });
         this._azurePipelineBranch = core.getInput('azure-pipeline-branch', { required: false });
+        let _waitForResult = core.getInput('azure-pipeline-branch', { required: false });
+        this._waitForResult = _waitForResult && _waitForResult[0].match(/[yYiItT]/) !== null;
     }
 
     public static getTaskParams() {
@@ -42,5 +45,9 @@ export class TaskParameters {
 
     public get azurePipelineBranch() {
         return this._azurePipelineBranch;
+    }
+
+    public get waitForResult() {
+        return this._waitForResult;
     }
 }

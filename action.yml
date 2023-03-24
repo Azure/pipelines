@@ -16,6 +16,9 @@ inputs:
   azure-pipeline-branch:
     description: 'If the pipeline is not linked to the current repo, use this branch containing the pipeline'
     required: false
+  wait-for-result:
+    description: 'Wait for the completion of the started Azure Pipeline (true/false)'
+    required: false
 runs:
   using: 'node12'
   main: 'lib/main.js'
