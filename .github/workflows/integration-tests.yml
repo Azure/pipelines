@@ -4,7 +4,7 @@ on:
     branches:
       - master
       - 'releases/*'
-jobs: 
+jobs:
     trigger-integration-tests:
       name: Trigger Integration tests
       runs-on: ubuntu-latest
@@ -13,16 +13,16 @@ jobs:
           uses: actions/checkout@v2
           with:
               path: IntegrationTests
-            
+
         - name: Trigger Test run
           env:
             token: ${{ secrets.L2_REPO_TOKEN }}
             commit: ${{ github.event.pull_request.head.sha }}
             repository: ${{ github.repository }}
-            prnumber: ${{ github.event.pull_request.number }} 
+            prnumber: ${{ github.event.pull_request.number }}
             prsource: ${{ github.event.pull_request.head.ref }}
             prtarget: ${{ github.event.pull_request.base.ref }}
-            username:  ${{ secrets.L2_REPO_USER }} 
+            username:  ${{ secrets.L2_REPO_USER }}
             prsourcerepository: ${{ github.event.pull_request.head.repo.full_name }}
           run: |
             bash ./IntegrationTests/.github/workflows/TriggerIntegrationTests.sh "$token" "$commit" "$repository" "$prnumber" "$prsource" "$prtarget" "$username" "$prsourcerepository"

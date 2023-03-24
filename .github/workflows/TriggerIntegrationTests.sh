@@ -10,14 +10,14 @@ fromRepo=$8
 getPayLoad() {
     cat <<EOF
 {
-    "event_type": "PipelinesPR", 
-    "client_payload": 
+    "event_type": "PipelinesPR",
+    "client_payload":
     {
-        "action": "Pipelines", 
-        "commit": "$commit", 
-        "repository": "$repository", 
-        "prNumber": "$prNumber", 
-        "tobranch": "$tobranch", 
+        "action": "Pipelines",
+        "commit": "$commit",
+        "repository": "$repository",
+        "prNumber": "$prNumber",
+        "tobranch": "$tobranch",
         "frombranch": "$frombranch",
         "fromRepo": "$fromRepo"
     }

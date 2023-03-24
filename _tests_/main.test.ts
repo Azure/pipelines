@@ -56,7 +56,7 @@ jest.mock('azure-devops-node-api', () => {
                 getBuildApi: async (url, handler) => await mockGetBuildApi(url, handler),
                 getReleaseApi: async () => await mockGetReleaseApi(),
             }
-        }) 
+        })
     }
 });
 
@@ -321,10 +321,10 @@ describe('Testing all functions of class PipelineRunner', () => {
         expect(mockGetReleaseApi).toBeCalled();
         expect(mockGetReleaseDefinitions).toBeCalledWith('my-project', 'my-pipeline', 4);
         const expectedRelease = {
-            artifacts: [], 
-            definitionId: 5, 
+            artifacts: [],
+            definitionId: 5,
             reason: 2
         };
         expect(mockCreateRelease).toBeCalledWith(expectedRelease, "my-project");
     });
-}); 
+});
