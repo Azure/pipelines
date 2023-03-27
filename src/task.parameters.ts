@@ -8,6 +8,7 @@ export class TaskParameters {
     private _azurePipelineVariables: string;
     private _azurePipelineBranch: string;
     private _waitForResult: boolean;
+    private _waitPeriod: number
 
     private constructor() {
         this._azureDevopsProjectUrl = core.getInput('azure-devops-project-url', { required: true });
@@ -17,6 +18,7 @@ export class TaskParameters {
         this._azurePipelineBranch = core.getInput('azure-pipeline-branch', { required: false });
         let _waitForResult = core.getInput('azure-pipeline-branch', { required: false });
         this._waitForResult = _waitForResult && _waitForResult[0].match(/[yYiItT]/) !== null;
+        this._waitPeriod = Number(core.getInput('wait-period', { required: false }) || '10') * 1000
     }
 
     public static getTaskParams() {
@@ -49,5 +51,9 @@ export class TaskParameters {
 
     public get waitForResult() {
         return this._waitForResult;
+    }
+
+    public get waitPeriod() {
+        return this._waitPeriod
     }
 }

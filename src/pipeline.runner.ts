@@ -18,8 +18,6 @@ export class PipelineRunner {
     readonly commitId = p.processEnv("GITHUB_SHA");
     readonly githubRepo = "GitHub";
 
-    readonly waitPeriod = 10_000;
-
     constructor(taskParameters: TaskParameters) {
         this.taskParameters = taskParameters
     }
@@ -120,7 +118,7 @@ export class PipelineRunner {
                 if (buildQueueResult._links != null) {
                     log.LogOutputUrl(buildQueueResult._links.web.href);
                 }
-                setTimeout(async () => await this.waitForPipeline(buildApi, build.project.id, buildQueueResult.id), this.waitPeriod);
+                setTimeout(async () => await this.waitForPipeline(buildApi, build.project.id, buildQueueResult.id), this.taskParameters.waitPeriod);
             }
         }
     }
@@ -130,7 +128,7 @@ export class PipelineRunner {
 
         if (build.status !== BuildStatus.Completed) {
             log.LogInfo(`Pipeline is not yet competed, waiting... (status: ${build.status})`);
-            setTimeout(async () => await this.waitForPipeline(buildApi, projectId, buildId), this.waitPeriod);
+            setTimeout(async () => await this.waitForPipeline(buildApi, projectId, buildId), this.taskParameters.waitPeriod);
             return
         }
         log.LogInfo(`Pipeline is completed, build result is: ${build.result}`);

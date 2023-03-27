@@ -19,6 +19,9 @@ inputs:
   wait-for-result:
     description: 'Wait for the completion of the started Azure Pipeline (true/false)'
     required: false
+  wait-period:
+    description: 'Seconds between attempting to get the build results'
+    required: false
 runs:
   using: 'node12'
   main: 'lib/main.js'
