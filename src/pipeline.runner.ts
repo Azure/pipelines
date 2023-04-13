@@ -127,15 +127,40 @@ export class PipelineRunner {
         let build:  BuildInterfaces.Build = await buildApi.getBuild(projectId, buildId, 'result,status');
 
         if (build.status !== BuildStatus.Completed) {
-            log.LogInfo(`Pipeline is not yet competed, waiting... (status: ${build.status})`);
+            let suffix = '';
+            switch (build.status) {
+                case BuildStatus.InProgress:
+                    suffix = ' = In Progress';
+                    break;
+                case BuildStatus.Cancelling:
+                    suffix = ' = Cancelling';
+                    break;
+                case BuildStatus.NotStarted:
+                    suffix = ' = Not Started';
+                    break;
+                case BuildStatus.Postponed:
+                    suffix = ' = Postponed';
+            }
+            log.LogInfo(`Pipeline is not yet competed, waiting... (status: ${build.status}${suffix})`);
             setTimeout(async () => await this.waitForPipeline(buildApi, projectId, buildId), this.taskParameters.waitPeriod);
             return
         }
         log.LogInfo(`Pipeline is completed, build result is: ${build.result}`);
 
         if (build.result != BuildResult.Succeeded) {
+            let suffix= '';
+            switch  (build.result) {
+                case BuildResult.Failed:
+                    suffix = ' = Failed';
+                    break;
+                case BuildResult.Canceled:
+                    suffix = ' = Canceled';
+                    break;
+                case BuildResult.PartiallySucceeded:
+                    suffix = ' = Partially Succeeded';
+            }
             log.LogInfo(`Pipeline result is not Succeeded`)
-            core.setFailed(`Pipeline result is not Succeeded (2), instead: ${build.result}`)
+            core.setFailed(`Pipeline result is not Succeeded (2), instead: ${build.result}${suffix}`)
         }
     }
 
