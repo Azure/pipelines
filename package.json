@@ -4,21 +4,24 @@
   "description": "Trigger Azure pipeline release",
   "main": "lib/main.js",
   "dependencies": {
-    "@actions/core": "^1.2.6",
+    "@actions/core": "^1.10.0",
     "@types/q": "^1.5.2"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.1",
     "@types/node": "^12.12.6",
-    "typescript": "^3.5.2",
     "azure-devops-node-api": "11.0.1",
     "jest": "^26.0.1",
-    "@types/jest": "^25.2.2",
-    "ts-jest": "^25.5.1"
+    "ts-jest": "^26.0.1",
+    "typescript": "^3.5.2",
+    "@vercel/ncc": "^0.36.0"
   },
   "scripts": {
     "build": "tsc",
+    "pack": "ncc build",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "all": "npm run build && npm run test && npm run test-coverage && npm run pack"
   },
   "author": "Nishu Bansal",
   "license": "MIT"
