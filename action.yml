@@ -14,8 +14,8 @@ inputs:
     description: 'Set pipeline template parameters'
     required: false
   azure-devops-token:
-    description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
-    required: true 
+    description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN'
+    required: true
 runs: 
-  using: 'node12' 
-  main: 'lib/main.js' 
+  using: 'node16'
+  main: 'dist/index.js'
