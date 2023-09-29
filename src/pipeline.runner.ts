@@ -82,6 +82,10 @@ export class PipelineRunner {
             core.debug("pipeline is not linked to same Github repo");
         }
 
+        let templateParameters = this.taskParameters.azureTemplateParameters ?
+            JSON.parse(this.taskParameters.azureTemplateParameters)
+            : undefined;
+
         let build: BuildInterfaces.Build = {
             definition: {
                 id: buildDefinition.id
@@ -92,7 +96,8 @@ export class PipelineRunner {
             sourceBranch: sourceBranch,
             sourceVersion: sourceVersion,
             reason: BuildInterfaces.BuildReason.Triggered,
-            parameters: this.taskParameters.azurePipelineVariables
+            parameters: this.taskParameters.azurePipelineVariables,
+            templateParameters: templateParameters
         } as BuildInterfaces.Build;
 
         log.LogPipelineTriggerInput(build);

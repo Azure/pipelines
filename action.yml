@@ -1,4 +1,4 @@
-name: 'Azure Pipelines Action' 
+name: 'Azure Pipelines Action'
 description: 'Trigger a run in Azure pipelines' 
 inputs:
   azure-devops-project-url:
@@ -10,9 +10,12 @@ inputs:
   azure-pipeline-variables: 
     description: 'Set/Overwrite pipeline variables' 
     required: false
-  azure-devops-token: 
-    description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
-    required: true 
+  azure-template-parameters:
+    description: 'Set pipeline template parameters'
+    required: false
+  azure-devops-token:
+    description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN'
+    required: true
 runs: 
-  using: 'node16' 
-  main: 'dist/index.js' 
+  using: 'node16'
+  main: 'dist/index.js'
