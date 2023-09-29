@@ -1,4 +1,4 @@
-name: 'Azure Pipelines Action' 
+name: 'Azure Pipelines Action - JVersion' 
 description: 'Trigger a run in Azure pipelines' 
 inputs:
   azure-devops-project-url:
