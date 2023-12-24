@@ -1,4 +1,4 @@
-token=$1
+token=$1 
 commit=$2
 repository=$3
 prNumber=$4
