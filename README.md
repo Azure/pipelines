@@ -14,7 +14,7 @@ Use this action to trigger a specific pipeline (YAML or Classic Release Pipeline
 Action takes Project URL, pipeline name and a [Personal Access Token (PAT)](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) for your DevOps account.
 
 ```yaml
-- uses: Azure/pipelines@v1
+- uses: Azure/pipelines@v1.2
   with:
     azure-devops-project-url: 'https://dev.azure.com/organization/project-name'
     azure-pipeline-name: 'pipeline-name' # name of the Azure pipeline to be triggered
