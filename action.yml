@@ -13,6 +13,9 @@ inputs:
   azure-devops-token: 
     description: 'Paste personal access token of the user as value of secret variable:AZURE_DEVOPS_TOKEN' 
     required: true 
+  azure-pipeline-parameters: 
+    description: 'Pipeline parameters to trigger the pipeline with' 
+    required: false 
 runs: 
   using: 'node16' 
   main: 'dist/index.js' 
