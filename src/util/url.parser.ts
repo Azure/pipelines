@@ -10,16 +10,16 @@ export class UrlParser {
         try {
             projectUrl = projectUrl.trim();
             this.EnsureProjectName(projectUrl);
-            var index = projectUrl.lastIndexOf("/");
-            var projectNamePart = projectUrl.substr(index + 1);
-            var projectName = decodeURI(projectNamePart);
+            const index = projectUrl.lastIndexOf("/");
+            const projectNamePart = projectUrl.substring(index + 1);
+            const projectName = decodeURI(projectNamePart);
             if (projectName) {
                 return projectName;
             } else {
                 throw Error();
             }
-        } catch (error) {
-            var errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
+        } catch {
+            const errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
             throw new Error(errorMessage);
         }
     }
@@ -32,27 +32,27 @@ export class UrlParser {
 
         try {
             projectUrl = projectUrl.trim();
-            var collectionUrl = projectUrl.substr(0, projectUrl.lastIndexOf("/"));
+            const collectionUrl = projectUrl.substring(0, projectUrl.lastIndexOf("/"));
             if (collectionUrl) {
                 return collectionUrl;
             } else {
                 throw Error();
             }
-        } catch (error) {
-            var errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
+        } catch {
+            const errorMessage = this.GetUrlParseExceptionMessage(projectUrl);
             throw new Error(errorMessage);
         }
     }
 
-    private static EnsureProjectName(projectUrl: string) {
-        var index = projectUrl.lastIndexOf("/");
+    private static EnsureProjectName(projectUrl: string): void {
+        const index = projectUrl.lastIndexOf("/");
         if (index == (projectUrl.length - 1)) {
             throw Error();
         }
     }
 
     private static GetUrlParseExceptionMessage(projectUrl: string): string {
-        let errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)) and try again.`;
+        const errorMessage = `Failed to parse project url: "${projectUrl}". Specify the valid project url (eg, https://dev.azure.com/organization/project-name or https://server.example.com:8080/tfs/DefaultCollection/project-name)) and try again.`;
         return errorMessage;
     }
 

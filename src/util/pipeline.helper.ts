@@ -9,21 +9,21 @@ export interface IErrorAndWarningMessage {
 
 export class PipelineHelper {
 
-    public static EnsureValidPipeline(projectName: string, pipelineName: string, pipelines: any) {
+    public static EnsureValidPipeline(projectName: string, pipelineName: string, pipelines: unknown[] | null | undefined): void {
         // If definition not found then Throw Error
         if (pipelines == null || pipelines.length == 0) {
-            let errorMessage = `Pipeline named "${pipelineName}" not found in project "${projectName}"`;
+            const errorMessage = `Pipeline named "${pipelineName}" not found in project "${projectName}"`;
             throw new PipelineNotFoundError(errorMessage);
         }
 
         if (pipelines.length > 1) {
             // If more than 1 definition found, throw ERROR
-            let errorMessage = `More than 1 Pipeline named "${pipelineName}" found in project "${projectName}"`;
+            const errorMessage = `More than 1 Pipeline named "${pipelineName}" found in project "${projectName}"`;
             throw Error(errorMessage);
         }
     }
 
-    public static equals(str1: string, str2: string): boolean {
+    public static equals(str1: string | null, str2: string | null): boolean {
 
         if (str1 === str2) {
             return true;
@@ -46,10 +46,10 @@ export class PipelineHelper {
             throw new Error(`env.${envVarName} is not set`);
         }
         return variable;
-    };
+    }
 
-    public static isGitHubArtifact(arifact: ReleaseInterfaces.Artifact): boolean {
-        if (arifact != null && arifact.type != null && arifact.type.toUpperCase() === "GITHUB") {
+    public static isGitHubArtifact(artifact: ReleaseInterfaces.Artifact): boolean {
+        if (artifact != null && artifact.type != null && artifact.type.toUpperCase() === "GITHUB") {
             return true;
         }
 
@@ -61,7 +61,7 @@ export class PipelineHelper {
         let warningMessage: string = "";
 
         if (validationResults && validationResults.length > 0) {
-            let errors = validationResults.filter((result: BuildInterfaces.BuildRequestValidationResult) => {
+            const errors = validationResults.filter((result: BuildInterfaces.BuildRequestValidationResult) => {
                 return result.result === BuildInterfaces.ValidationResult.Error;
             });
 
@@ -74,7 +74,7 @@ export class PipelineHelper {
         }
         // Taking into account server errors also which comes not in form of array, like no build queue permissions
         else if (validationResults) {
-            errorMessage = this._getErrorMessageFromServer(<any>validationResults);
+            errorMessage = this._getErrorMessageFromServer(validationResults as unknown);
         }
 
         return {
@@ -84,21 +84,22 @@ export class PipelineHelper {
     }
 
     private static _joinValidateResults(validateResults: BuildInterfaces.BuildRequestValidationResult[]): string {
-        let resultMessages = validateResults.map((validationResult: BuildInterfaces.BuildRequestValidationResult) => {
+        const resultMessages: (string | undefined)[] = validateResults.map((validationResult: BuildInterfaces.BuildRequestValidationResult) => {
             return validationResult.message;
         });
 
-        resultMessages = resultMessages.filter((message: string) => !!message);
-        return resultMessages.join(",");
+        const filtered = resultMessages.filter((message): message is string => !!message);
+        return filtered.join(",");
     }
 
-    private static _getErrorMessageFromServer(validationResult: any): string {
+    private static _getErrorMessageFromServer(validationResult: unknown): string {
         let errorMessage: string = "";
-        if (validationResult) {
-            errorMessage = validationResult.message || "";
+        const result = validationResult as { message?: string; serverError?: { message?: string } };
+        if (result) {
+            errorMessage = result.message || "";
         }
-        if (validationResult && validationResult.serverError && errorMessage.length === 0) {
-            errorMessage = validationResult.serverError.message || "";
+        if (result && result.serverError && errorMessage.length === 0) {
+            errorMessage = result.serverError.message || "";
         }
 
         return errorMessage;

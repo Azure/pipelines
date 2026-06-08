@@ -14,7 +14,7 @@ export class Logger {
     }
 
     public static LogPipelineTriggered(pipelineName: string, projectName: string) {
-        core.info(`\Pipeline '${pipelineName}' is triggered in project '${projectName}'`);
+        core.info(`Pipeline '${pipelineName}' is triggered in project '${projectName}'`);
     }
 
     public static LogPipelineObject(object: any) {
